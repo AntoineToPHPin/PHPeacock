@@ -9,7 +9,7 @@ MyApp
 ├── docs/
 ├── public/
 |   ├── css/
-|   ├── image/
+|   ├── images/
 |   └── js/
 ├── resources/
 ├── src/
