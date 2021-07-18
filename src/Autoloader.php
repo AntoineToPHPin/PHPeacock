@@ -26,7 +26,7 @@ class Autoloader
      * 
      * @return void
      */
-    private function load(string $className): void
+    protected function load(string $className): void
     {
         $nameFragments = explode(separator: '\\', string: $className);
         $nameFragmentsLength = count(value: $nameFragments);
