@@ -46,3 +46,7 @@ require_once '../src/Autoloader.php';
 (new Autoloader)->register();
 
 ```
+
+## Class diagram
+
+![Autoloader UML class diagram](uml/autoloader.svg)
