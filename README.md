@@ -9,3 +9,5 @@ PHPeacock is a light and easy-to-use PHP framework for web applications.
 1. [Filesystem skeleton](docs/Skeleton.md)
 
 2. [Autoloader](docs/AutoloaderClass.md)
+
+3. [Collections](docs/CollectionClasses.md)
