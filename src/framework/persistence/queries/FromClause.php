@@ -15,7 +15,7 @@ trait FromClause
     /**
      * Adds a table to list, with alias if necessary.
      * 
-     * @param string $table Table to list.
+     * @param string      $table Table to list.
      * @param string|null $alias Table alias.
      * 
      * @return self
