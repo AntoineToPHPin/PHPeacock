@@ -3,13 +3,62 @@ namespace PHPeacock\Framework\Persistence\Entities;
 
 use PHPeacock\Framework\Persistence\Connections\DBMSConnection;
 
+/**
+ * Abstract object which selects entities.
+ */
 abstract class SelectEntity
 {
+    /**
+     * Related database management system connection.
+     * @var DBMSConnection $dbmsConnection
+     */
     protected DBMSConnection $dbmsConnection;
 
+    /**
+     * Selects a entity from the database by its ID.
+     * 
+     * @param int $id
+     * 
+     * @return Entity
+     */
     abstract public function selectById(int $id): Entity;
 
+    /**
+     * Selects all entities from the database.
+     * 
+     * @return EntityCollection
+     */
     abstract public function selectAll(): EntityCollection;
 
+    /**
+     * Selects limited entities from the database.
+     * 
+     * @param int      $length Limit length.
+     * @param int|null $offset Limit offset.
+     * 
+     * @return EntityCollection
+     */
     abstract public function selectWithLimit(int $length, ?int $offset = null): EntityCollection;
+
+    /**
+     * Returns the dbmsConnection property.
+     * 
+     * @return DBMSConnection
+     */
+    public function getDBMSConnection(): DBMSConnection
+    {
+        return $this->dbmsConnection;
+    }
+
+    /**
+     * Sets the dbmsConnection property.
+     * 
+     * @param DBMSConnection $dbmsConnection Related DBMS connection.
+     * 
+     * @return void
+     */
+    public function setDBMSConnection(DBMSConnection $dbmsConnection): void
+    {
+        $this->dbmsConnection = $dbmsConnection;
+    }
 }
