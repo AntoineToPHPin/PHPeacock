@@ -4,9 +4,9 @@ With PHP, collections are essentials to guarantee that a list contains instances
 
 ## Precaution
 
-The abstract `Collection` do not have any `attach` or `detach` methods on purpose, to prevent the breaking of the Liskov subsitution principle.
+The abstract `Collection` do not have any `attach` or `detach` methods on purpose, to prevent the breaking of the Liskov substitution principle.
 
-## Inheritance
+## Implementation
 
 Each `Collection` child must override the parent constructor to control the parameters type, and may have an `attach` and `detach` method, as below:
 
@@ -14,7 +14,7 @@ Each `Collection` child must override the parent constructor to control the para
 <?php
 namespace MyApp\Domains\MyDomain;
 
-use MyApp\Framework\Structures\Collection;
+use PHPeacock\Framework\Structures\Collection;
 use MyApp\Domains\MyDomain\Example;
 
 class ExampleCollection extends Collection
@@ -41,4 +41,4 @@ class ExampleCollection extends Collection
 
 ## Class diagram
 
-![collections UML class diagram](uml/collections.svg)
+![Collections UML class diagram](uml/collections.svg)
