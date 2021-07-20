@@ -4,11 +4,16 @@ namespace PHPeacock\Framework\Persistence\Entities;
 use PHPeacock\Framework\Persistence\Connections\DBMSConnection;
 
 /**
- * Abstract object which can be store in database.
+ * Abstract object which can be stored in database.
  */
 abstract class Entity implements InsertEntity, UpdateEntity, DeleteEntity
 {
-
+    /**
+     * Unique ID for database storage.
+     * @var int|null $id
+     */
+    protected ?int $id;
+    
     /**
      * Related database management system connection.
      * @var DBMSConnection|null $dbmsConnection
@@ -16,13 +21,7 @@ abstract class Entity implements InsertEntity, UpdateEntity, DeleteEntity
     protected ?DBMSConnection $dbmsConnection;
 
     /**
-     * Unique id for database storage.
-     * @var int|null $id
-     */
-    protected ?int $id;
-
-    /**
-     * Returns the id.
+     * Returns the id property.
      * 
      * @return int
      */
@@ -34,7 +33,8 @@ abstract class Entity implements InsertEntity, UpdateEntity, DeleteEntity
     /**
      * Sets the id property.
      * 
-     * @param int $id Entity id.
+     * @param int $id Entity ID.
+     * 
      * @return void
      */
     public function setId(int $id): void
@@ -43,7 +43,7 @@ abstract class Entity implements InsertEntity, UpdateEntity, DeleteEntity
     }
 
     /**
-     * Returns the DBMS connection.
+     * Returns the dbmsConnection property.
      * 
      * @return DBMSConnection
      */
@@ -56,6 +56,7 @@ abstract class Entity implements InsertEntity, UpdateEntity, DeleteEntity
      * Sets the dbmsConnection property.
      * 
      * @param DBMSConnection $dbmsConnection Related DBMS connection.
+     * 
      * @return void
      */
     public function setDBMSConnection(DBMSConnection $dbmsConnection): void
