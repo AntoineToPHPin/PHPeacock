@@ -19,7 +19,7 @@ $database = new Database(
     host: $config['database']['host'],
     name: $config['database']['name'],
     user: $config['database']['user'],
-    password: $config['database']['password']
+    password: $config['database']['password'],
 );
 
 $mySQLConnection = new MySQLConnection(database: $database);
@@ -55,7 +55,8 @@ class Example extends Entity
         ?DBMSConnection $dbmsConnection = null,
         ?int $id = null,
         protected string $field1,
-        protected string $field2)
+        protected string $field2,
+    )
     {
         $this->id = $id;
         $this->dbmsConnection = $dbmsConnection;
@@ -176,56 +177,6 @@ class ExampleCollection extends EntityCollection
 
 ```
 
-### In `src/domains/mydomain/ExampleCollection.php`
-
-```php
-<?php
-namespace MyApp\Domains\Mydomain;
-
-use PHPeacock\Framework\Persistence\Entities\EntityCollection;
-
-/**
- * Collection of examples.
- */
-class ExampleCollection extends EntityCollection
-{
-    /**
-     * @param Example $examples,... Examples to add.
-     */
-    public function __construct(Example ...$examples)
-    {
-        parent::__construct(...$examples);
-    }
-
-    /**
-     * Adds the example to the collection.
-     * 
-     * @param Example $example Example to add.
-     * 
-     * @return self
-     */
-    public function attach(Example $example): self
-    {
-        $this->elements->attach(object: $example);
-        return $this;
-    }
-
-    /**
-     * Removes the example from the collection.
-     * 
-     * @param Example $example Example to remove.
-     * 
-     * @return self
-     */
-    public function detach(Example $example): self
-    {
-        $this->elements->detach(object: $example);
-        return $this;
-    }
-}
-
-```
-
 ### In `src/domains/mydomain/SelectExample.php`
 
 ```php
@@ -270,7 +221,7 @@ class SelectExample extends SelectEntity
             dbmsConnection: $this->getDBMSConnection(),
             id: $example['id'],
             field1: $example['field1'],
-            field2: $example['field2']
+            field2: $example['field2'],
         );
     }
 
@@ -300,7 +251,7 @@ class SelectExample extends SelectEntity
                 dbmsConnection: $this->getDBMSConnection(),
                 id: $example['id'],
                 field1: $example['field1'],
-                field2: $example['field2']
+                field2: $example['field2'],
             ));
         }
 
@@ -334,7 +285,7 @@ class SelectExample extends SelectEntity
                 dbmsConnection: $this->getDBMSConnection(),
                 id: $example['id'],
                 field1: $example['field1'],
-                field2: $example['field2']
+                field2: $example['field2'],
             ));
         }
 
