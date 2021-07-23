@@ -36,7 +36,7 @@ class Database
         protected string $host,
         protected string $name,
         protected string $user,
-        protected string $password
+        protected string $password,
     )
     { }
 
