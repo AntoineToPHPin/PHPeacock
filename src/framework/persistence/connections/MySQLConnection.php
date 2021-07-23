@@ -11,10 +11,8 @@ class MySQLConnection extends ConnectionWithPDO
     /**
      * @param Database $database Related database.
      */
-    public function __construct(Database $database)
+    public function __construct(protected Database $database)
     {
-        $this->database = $database;
-
         $this->pdo = new PDO(
             dsn:
                 'mysql:host=' . $this->database->getHost() . ';' .
@@ -27,7 +25,7 @@ class MySQLConnection extends ConnectionWithPDO
                 PDO::ATTR_PERSISTENT => false,
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            )
+            ),
         );
     }
 

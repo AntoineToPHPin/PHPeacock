@@ -19,7 +19,7 @@ $database = new Database(
     host: $config['database']['host'],
     name: $config['database']['name'],
     user: $config['database']['user'],
-    password: $config['database']['password']
+    password: $config['database']['password'],
 );
 
 $mySQLConnection = new MySQLConnection(database: $database);
@@ -55,7 +55,8 @@ class Example extends Entity
         ?DBMSConnection $dbmsConnection = null,
         ?int $id = null,
         protected string $field1,
-        protected string $field2)
+        protected string $field2,
+    )
     {
         $this->id = $id;
         $this->dbmsConnection = $dbmsConnection;
