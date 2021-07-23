@@ -13,3 +13,5 @@ PHPeacock is a light and easy-to-use PHP framework for web applications.
 3. [Collections](docs/CollectionClasses.md)
 
 4. [Persistence](docs/Persistence.md)
+
+5. [URL routing](docs/URLRouting.md)
