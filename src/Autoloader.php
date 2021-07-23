@@ -1,6 +1,8 @@
 <?php
 namespace PHPeacock;
 
+use PHPeacock\Framework\Exceptions\FileNotFoundException;
+
 /**
  * Application autoloader.
  * 
@@ -24,6 +26,8 @@ class Autoloader
      * 
      * @param string $className Name of the class, with namespace.
      * 
+     * @throws FileNotFoundException if the loaded file does not exist.
+     * 
      * @return void
      */
     protected function load(string $className): void
@@ -44,6 +48,14 @@ class Autoloader
             }
         }
 
-        require_once implode(separator: DIRECTORY_SEPARATOR, array: $path) . '.php';
+        $file = implode(separator: DIRECTORY_SEPARATOR, array: $path) . '.php';
+        if (file_exists(stream_resolve_include_path($file)))
+        {
+            require_once $file;
+        }
+        else
+        {
+            throw new FileNotFoundException(message: $file);
+        }
     }
 }
