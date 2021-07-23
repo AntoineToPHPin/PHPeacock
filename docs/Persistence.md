@@ -221,7 +221,7 @@ class SelectExample extends SelectEntity
             dbmsConnection: $this->getDBMSConnection(),
             id: $example['id'],
             field1: $example['field1'],
-            field2: $example['field2']
+            field2: $example['field2'],
         );
     }
 
@@ -251,7 +251,7 @@ class SelectExample extends SelectEntity
                 dbmsConnection: $this->getDBMSConnection(),
                 id: $example['id'],
                 field1: $example['field1'],
-                field2: $example['field2']
+                field2: $example['field2'],
             ));
         }
 
@@ -285,7 +285,7 @@ class SelectExample extends SelectEntity
                 dbmsConnection: $this->getDBMSConnection(),
                 id: $example['id'],
                 field1: $example['field1'],
-                field2: $example['field2']
+                field2: $example['field2'],
             ));
         }
 
