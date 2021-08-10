@@ -2,7 +2,7 @@
 namespace PHPeacock\Framework\Exceptions\Autoloader;
 
 /**
- * Exception for a class not found.
+ * Exception for a not found class.
  */
 class ClassNotFoundException extends AutoloaderException
 { }
