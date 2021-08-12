@@ -8,12 +8,12 @@ trait OrderByClause
 {
     /**
      * Fields to order by.
-     * @var int $limitLength
+     * @var array $order
      */
     protected array $order;
 
     /**
-     * Adds the fields to order by.
+     * Adds a field to order by.
      * 
      * @param string $field Field to order by.
      * @param string $order Field order.

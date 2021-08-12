@@ -7,7 +7,7 @@ namespace PHPeacock\Framework\Persistence\Queries;
 trait JoinClause
 {
     /**
-     * Liste of joins.
+     * List of joins.
      * @var array $joins
      */
     protected array $joins;
@@ -24,7 +24,9 @@ trait JoinClause
      */
     public function join(string $type, string $table, string $condition, ?string $alias = null): self
     {
-        $this->joins[] = strtoupper(string: $type) . ' JOIN ' . $table . (isset($alias) ? ' ' . $alias : '') . ' ON ' . $condition;
+        $this->joins[] =
+            strtoupper(string: $type) . ' JOIN ' . $table . (isset($alias) ? ' ' . $alias : '') .
+            ' ON ' . $condition;
 
         return $this;
     }
