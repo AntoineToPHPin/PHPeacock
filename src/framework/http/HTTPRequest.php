@@ -20,7 +20,7 @@ class HTTPRequest
 
     /**
      * HTTP POST variables.
-     * @var array $getVariables
+     * @var array $postVariables
      */
     protected array $postVariables;
 
@@ -56,20 +56,24 @@ class HTTPRequest
      * 
      * @param string $name GET variable name.
      * 
-     * @throws HTTPVariableException if the HTTP variable does not exist.
-     * 
      * @return string
      */
     public function getGetVariableByName(string $name): string
     {
-        if (isset($this->getVariables[$name]))
-        {
-            return $this->getVariables[$name];
-        }
-        else
-        {
-            throw new HTTPVariableException();
-        }
+        return $this->getVariables[$name] ?? '';
+    }
+
+    /**
+     * Adds a HTTP GET variable.
+     * 
+     * @param string $name  GET variable name.
+     * @param string $value GET variable value.
+     * 
+     * @return void
+     */
+    public function addGetVariable(string $name, string $value): void
+    {
+        $this->getVariables[$name] = $value;
     }
 
     /**
@@ -91,13 +95,19 @@ class HTTPRequest
      */
     public function getPostVariableByName(string $name): string
     {
-        if (isset($this->postVariables[$name]))
-        {
-            return $this->postVariables[$name];
-        }
-        else
-        {
-            throw new HTTPVariableException();
-        }
+        return $this->postVariables[$name] ?? '';
+    }
+
+    /**
+     * Adds a HTTP POST variable.
+     * 
+     * @param string $name  POST variable name.
+     * @param string $value POST variable value.
+     * 
+     * @return void
+     */
+    public function addPostVariable(string $name, string $value): void
+    {
+        $this->postVariables[$name] = $value;
     }
 }
