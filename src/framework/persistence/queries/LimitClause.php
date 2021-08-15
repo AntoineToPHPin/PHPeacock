@@ -2,7 +2,7 @@
 namespace PHPeacock\Framework\Persistence\Queries;
 
 /**
- * SQL select clause.
+ * SQL limit clause.
  */
 trait LimitClause
 {

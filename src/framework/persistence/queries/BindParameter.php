@@ -2,7 +2,7 @@
 namespace PHPeacock\Framework\Persistence\Queries;
 
 /**
- * Parameter to bind.
+ * Parameters to bind.
  */
 trait BindParameter
 {
@@ -10,7 +10,7 @@ trait BindParameter
      * Parameters to bind.
      * @var array $parameters
      */
-    protected array $parameters;
+    protected array $parameters = [];
 
     /**
      * Adds a parameter.

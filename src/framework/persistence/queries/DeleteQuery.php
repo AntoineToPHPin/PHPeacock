@@ -1,6 +1,8 @@
 <?php
 namespace PHPeacock\Framework\Persistence\Queries;
 
+use PHPeacock\Framework\Exceptions\Persistence\Queries\DeleteClauseException;
+
 /**
  * SQL delete queries builder.
  */
@@ -15,6 +17,11 @@ class DeleteQuery implements SQLQuery
      */
     public function __toString(): string
     {
+        if (!isset($this->deleteTable))
+        {
+            throw new DeleteClauseException(message: 'The delete clause is missing.');
+        }
+
         $conditions = '';
         if (isset($this->conditions))
         {

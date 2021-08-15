@@ -1,6 +1,9 @@
 <?php
 namespace PHPeacock\Framework\Persistence\Queries;
 
+use PHPeacock\Framework\Exceptions\Persistence\Queries\FromClauseException;
+use PHPeacock\Framework\Exceptions\Persistence\Queries\SelectClauseException;
+
 /**
  * SQL select queries builder.
  */
@@ -19,9 +22,23 @@ class SelectQuery implements SQLQuery
      */
     public function __toString(): string
     {
-        $fields = implode(separator: ', ', array: $this->fields);
+        if (isset($this->fields))
+        {
+            $fields = implode(separator: ', ', array: $this->fields);
+        }
+        else
+        {
+            throw new SelectClauseException(message: 'The select clause is missing.');
+        }
 
-        $tables = implode(separator: ', ', array: $this->tables);
+        if (isset($this->tables))
+        {
+            $tables = implode(separator: ', ', array: $this->tables);
+        }
+        else
+        {
+            throw new FromClauseException(message: 'The from clause is missing.');
+        }
 
         $joins = '';
         if (isset($this->joins))
