@@ -15,3 +15,7 @@ PHPeacock is a light and easy-to-use PHP framework for web applications.
 4. [Persistence](docs/Persistence.md)
 
 5. [URL routing](docs/URLRouting.md)
+
+## License
+
+PHPeacock is licensed under the [MIT license](LICENSE).
