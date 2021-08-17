@@ -1,86 +1,46 @@
 <?php
 namespace PHPeacock\Framework\Routing;
 
-use PHPeacock\Framework\Persistence\Connections\DBMSConnection;
-
 /**
- * Abstract controller which creates and triggers an action.
+ * Abstract controller which executes an action.
  */
 abstract class Controller
 {
     /**
-     * Related database management system connection.
-     * @var DBMSConnection $dbmsConnection
+     * Action to execute.
+     * @var Action $action
      */
+    protected Action $action;
 
     /**
-     * Action class name.
-     * @var string $action
-     */
-
-    /**
-     * Action parameters.
-     * @var string $actionParameters
-     */
-
-    /**
-     * @param DBMSConnection $dbmsConnection   Related database management system connection.
-     * @param string         $action           Action class name.
-     * @param array          $actionParameters Action parameters.
-     */
-    public function __construct(
-        protected DBMSConnection $dbmsConnection,
-        protected string $action,
-        protected array $actionParameters = [],
-    )
-    { }
-
-    /**
-     * Creates an action object and triggers it.
+     * Executes an action.
      * 
      * @return void
      */
-    abstract public function render(): void;
-
-    /**
-     * Returns the dbmsConnection property.
-     * 
-     * @return DBMSConnection
-     */
-    public function getDBMSConnection(): DBMSConnection
+    public function render(): void
     {
-        return $this->dbmsConnection;
+        $this->action->execute();
     }
 
     /**
      * Returns the action property.
      * 
-     * @return string
+     * @return Action
      */
-    public function getAction(): string
+    public function getAction(): Action
     {
         return $this->action;
     }
 
     /**
-     * Returns the actionParameters property.
+     * Sets the action property.
      * 
-     * @return array
-     */
-    public function getActionParameters(): array
-    {
-        return $this->actionParameters;
-    }
-
-    /**
-     * Sets the actionParameters property.
-     * 
-     * @param DBMSConnection $actionParameters Action parameters.
+     * @param Action $action Action to execute.
      * 
      * @return void
      */
-    public function setActionParameters(array $actionParameters): void
+    public function setAction(Action $action): void
     {
-        $this->actionParameters = $actionParameters;
+        $this->action = $action;
     }
 }

@@ -17,12 +17,19 @@ class Route
      */
 
     /**
+     * URI variables.
+     * @var array $uriVariables
+     */
+
+    /**
      * @param string     $requestURI Request URI.
      * @param Controller $controller Controller.
+     * @param array      $uriVariables URI variables.
      */
     public function __construct(
         protected string $requestURI,
         protected Controller $controller,
+        protected array $uriVariables = [],
     )
     { }
 
@@ -68,5 +75,27 @@ class Route
     public function setController(Controller $controller): void
     {
         $this->controller = $controller;
+    }
+
+    /**
+     * Returns the uriVariables property.
+     * 
+     * @return array
+     */
+    public function getURIVariables(): array
+    {
+        return $this->uriVariables;
+    }
+
+    /**
+     * Sets the uriVariables property.
+     * 
+     * @param array $uriVariables URI variables.
+     * 
+     * @return void
+     */
+    public function setURIVariables(array $uriVariables): void
+    {
+        $this->uriVariables = $uriVariables;
     }
 }
