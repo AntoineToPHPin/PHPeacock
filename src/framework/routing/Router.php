@@ -1,7 +1,7 @@
 <?php
 namespace PHPeacock\Framework\Routing;
 
-use PHPeacock\Framework\Exceptions\ControllerNotFoundException;
+use PHPeacock\Framework\Exceptions\Routing\ControllerNotFoundException ;
 use PHPeacock\Framework\HTTP\HTTPRequest;
 
 /**
@@ -30,7 +30,11 @@ class Router
     { }
 
     /**
-     * Returns the right controller from the routes collection.
+     * Returns the right controller from the route collection.
+     * 
+     * The router compares the input request URI with each route’s request URI regex.
+     * If URI variables are provided, the router adds the variables to the HTTPRequest
+     * instance (regex capturing group can be used).
      * 
      * @throws ControllerNotFoundException if there is no route for the request URI.
      * 
@@ -39,7 +43,7 @@ class Router
     public function getController(): Controller
     {
         $requestURI = $this->httpRequest->getGetVariableByName(name: 'requestURI');
-        
+
         foreach ($this->routeCollection as $route)
         {
             $regexPattern = '~^' . $route->getRequestURI() . '/?$~i';
@@ -51,22 +55,22 @@ class Router
             {
                 $controller = $route->getController();
 
-                $parameters = [];
-                foreach ($controller->getActionParameters() as $key => $value)
+                foreach ($route->getURIVariables() as $key => $value)
                 {
-                    $parameters[$key] = preg_replace(
-                        pattern: $regexPattern,
-                        replacement: $value,
-                        subject: $requestURI,
+                    $controller->getAction()->getHTTPRequest()->addGetVariable(
+                        name: $key,
+                        value: preg_replace(
+                            pattern: $regexPattern,
+                            replacement: $value,
+                            subject: $requestURI,
+                        )
                     );
                 }
-
-                $controller->setActionParameters(actionParameters: $parameters);
 
                 return $controller;
             }
         }
 
-        throw new ControllerNotFoundException();
+        throw new ControllerNotFoundException(message: 'The request URI has no match.');
     }
 }
