@@ -13,7 +13,7 @@ class MySQLConnection extends ConnectionWithPDO
     /**
      * @param Database $database Related database.
      * 
-     * @throws ConnectionException if the connection to the database fail.
+     * @throws ConnectionException if the connection to the database fails.
      */
     public function __construct(protected Database $database)
     {
@@ -31,12 +31,16 @@ class MySQLConnection extends ConnectionWithPDO
                     PDO::ATTR_PERSISTENT => false,
                     PDO::ATTR_EMULATE_PREPARES => false,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::MYSQL_ATTR_FOUND_ROWS => true,
                 ),
             );
         }
         catch (PDOException $exception)
         {
-            throw new ConnectionException(message: $exception->getMessage(), previous: $exception);
+            throw new ConnectionException(
+                message: 'An error occurs when the connection to the datadase fails.',
+                previous: $exception
+            );
         }
     }
 }

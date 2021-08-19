@@ -11,7 +11,7 @@ interface InsertEntity
      * 
      * @throws InsertEntityException if an error occurs when inserting an entity.
      * 
-     * @return void
+     * @return int Number of affected rows.
      */
-    public function insert(): void;
+    public function insert(): int;
 }

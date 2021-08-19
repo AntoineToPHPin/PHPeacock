@@ -16,16 +16,16 @@ abstract class Entity implements InsertEntity, UpdateEntity, DeleteEntity
     
     /**
      * Related database management system connection.
-     * @var DBMSConnection|null $dbmsConnection
+     * @var DBMSConnection $dbmsConnection
      */
-    protected ?DBMSConnection $dbmsConnection;
+    protected DBMSConnection $dbmsConnection;
 
     /**
      * Returns the id property.
      * 
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

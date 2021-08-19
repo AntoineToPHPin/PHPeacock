@@ -64,9 +64,9 @@ abstract class DBMSConnection
     abstract public function getInsertedId(): int;
 
     /**
-     * Returns the number of rows affected.
+     * Returns the number of affected rows.
      * 
-     * @throws AffectedRowsException if an error occurs when fetching the number of rows affected.
+     * @throws AffectedRowsException if an error occurs when fetching the number of affected rows.
      * 
      * @return int
      */
