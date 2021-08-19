@@ -17,7 +17,9 @@ abstract class SelectEntity
     /**
      * Selects an entity from the database by its ID.
      * 
-     * @param int $id
+     * @param int $id Entity ID.
+     * 
+     * @throws SelectEntityException if an error occurs when selecting an entity.
      * 
      * @return Entity
      */
@@ -25,6 +27,8 @@ abstract class SelectEntity
 
     /**
      * Selects all entities from the database.
+     * 
+     * @throws SelectEntityException if an error occurs when selecting all entities.
      * 
      * @return EntityCollection
      */
@@ -35,6 +39,8 @@ abstract class SelectEntity
      * 
      * @param int      $length Limit length.
      * @param int|null $offset Limit offset.
+     * 
+     * @throws SelectEntityException if an error occurs when selecting entities with limit.
      * 
      * @return EntityCollection
      */
