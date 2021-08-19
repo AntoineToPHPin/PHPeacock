@@ -11,7 +11,7 @@ interface DeleteEntity
      * 
      * @throws DeleteEntityException if an error occurs when deleting an entity.
      * 
-     * @return void
+     * @return int Number of affected rows.
      */
-    public function delete(): void;
+    public function delete(): int;
 }

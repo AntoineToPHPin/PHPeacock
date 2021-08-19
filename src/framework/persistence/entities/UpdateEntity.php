@@ -11,7 +11,7 @@ interface UpdateEntity
      * 
      * @throws UpdateEntityException if an error occurs when updating an entity.
      * 
-     * @return void
+     * @return int Number of affected rows.
      */
-    public function update(): void;
+    public function update(): int;
 }

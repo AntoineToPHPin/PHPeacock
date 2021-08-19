@@ -15,7 +15,7 @@ abstract class SelectEntity
     protected DBMSConnection $dbmsConnection;
 
     /**
-     * Selects a entity from the database by its ID.
+     * Selects an entity from the database by its ID.
      * 
      * @param int $id
      * 
