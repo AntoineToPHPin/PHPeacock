@@ -1,7 +1,7 @@
 <?php
 namespace PHPeacock\Framework\Routing;
 
-use PHPeacock\Framework\Exceptions\Routing\ControllerNotFoundException ;
+use PHPeacock\Framework\Exceptions\Routing\ActionNotFoundException;
 use PHPeacock\Framework\HTTP\HTTPRequest;
 
 /**
@@ -30,17 +30,17 @@ class Router
     { }
 
     /**
-     * Returns the right controller from the route collection.
+     * Returns the right action from the route collection.
      * 
      * The router compares the input request URI with each route’s request URI regex.
      * If URI variables are provided, the router adds the variables to the HTTPRequest
      * instance (regex capturing group can be used).
      * 
-     * @throws ControllerNotFoundException if there is no route for the request URI.
+     * @throws ActionNotFoundException if there is no route for the request URI.
      * 
-     * @return Controller
+     * @return Action
      */
-    public function getController(): Controller
+    public function getAction(): Action
     {
         $requestURI = $this->httpRequest->getGetVariableByName(name: 'requestURI');
 
@@ -53,11 +53,11 @@ class Router
                 subject: $requestURI,
             ))
             {
-                $controller = $route->getController();
+                $action = $route->getAction();
 
                 foreach ($route->getURIVariables() as $key => $value)
                 {
-                    $controller->getAction()->getHTTPRequest()->addGetVariable(
+                    $action->getHTTPRequest()->addGetVariable(
                         name: $key,
                         value: preg_replace(
                             pattern: $regexPattern,
@@ -67,10 +67,10 @@ class Router
                     );
                 }
 
-                return $controller;
+                return $action;
             }
         }
 
-        throw new ControllerNotFoundException(message: 'The request URI has no match.');
+        throw new ActionNotFoundException(message: 'The request URI has no match.');
     }
 }

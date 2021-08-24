@@ -2,9 +2,9 @@
 namespace PHPeacock\Framework\Routing;
 
 /**
- * Route between a request URI and a controller.
+ * Abstract route between a request URI and an action.
  */
-class Route
+abstract class Route
 {
     /**
      * Request URI.
@@ -12,26 +12,14 @@ class Route
      */
 
     /**
-     * Controller.
-     * @var Controller $controller
+     * Action.
+     * @var Action $action
      */
 
     /**
      * URI variables.
      * @var array $uriVariables
      */
-
-    /**
-     * @param string     $requestURI Request URI.
-     * @param Controller $controller Controller.
-     * @param array      $uriVariables URI variables.
-     */
-    public function __construct(
-        protected string $requestURI,
-        protected Controller $controller,
-        protected array $uriVariables = [],
-    )
-    { }
 
     /**
      * Returns the requestURI property.
@@ -56,25 +44,25 @@ class Route
     }
 
     /**
-     * Returns the controller property.
+     * Returns the action property.
      * 
-     * @return Controller
+     * @return Action
      */
-    public function getController(): Controller
+    public function getAction(): Action
     {
-        return $this->controller;
+        return $this->action;
     }
 
     /**
-     * Sets the controller property.
+     * Sets the action property.
      * 
-     * @param Controller $controller Controller.
+     * @param Action $action Action.
      * 
      * @return void
      */
-    public function setController(Controller $controller): void
+    public function setAction(Action $action): void
     {
-        $this->controller = $controller;
+        $this->action = $action;
     }
 
     /**
