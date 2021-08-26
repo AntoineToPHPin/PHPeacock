@@ -10,16 +10,19 @@ abstract class Route
      * Request URI.
      * @var string $requestURI
      */
+    protected string $requestURI;
 
     /**
      * Action.
      * @var Action $action
      */
+    protected Action $action;
 
     /**
-     * URI variables.
-     * @var array $uriVariables
+     * URI parameters.
+     * @var ParameterCollection|null $parameters
      */
+    protected ?ParameterCollection $parameters;
 
     /**
      * Returns the requestURI property.
@@ -66,24 +69,24 @@ abstract class Route
     }
 
     /**
-     * Returns the uriVariables property.
+     * Returns the parameters property.
      * 
-     * @return array
+     * @return ParameterCollection|null
      */
-    public function getURIVariables(): array
+    public function getParameters(): ?ParameterCollection
     {
-        return $this->uriVariables;
+        return $this->parameters;
     }
 
     /**
-     * Sets the uriVariables property.
+     * Sets the parameters property.
      * 
-     * @param array $uriVariables URI variables.
+     * @param ParameterCollection|null $parameters URI parameters.
      * 
      * @return void
      */
-    public function setURIVariables(array $uriVariables): void
+    public function setParameters(?ParameterCollection $parameters): void
     {
-        $this->uriVariables = $uriVariables;
+        $this->parameters = $parameters;
     }
 }
