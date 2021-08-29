@@ -25,6 +25,12 @@ abstract class Route
     protected ?ParameterCollection $parameters;
 
     /**
+     * Child routes.
+     * @var RouteCollection|null $childRoutes
+     */
+    protected ?RouteCollection $childRoutes;
+
+    /**
      * Returns the requestURI property.
      * 
      * @return string
@@ -88,5 +94,27 @@ abstract class Route
     public function setParameters(?ParameterCollection $parameters): void
     {
         $this->parameters = $parameters;
+    }
+
+    /**
+     * Returns the childRoutes property.
+     * 
+     * @return RouteCollection|null
+     */
+    public function getChildRoutes(): ?RouteCollection
+    {
+        return $this->childRoutes;
+    }
+
+    /**
+     * Sets the childRoutes property.
+     * 
+     * @param RouteCollection|null $childRoutes Child routes.
+     * 
+     * @return void
+     */
+    public function setChildRoutes(?RouteCollection $childRoutes): void
+    {
+        $this->childRoutes = $childRoutes;
     }
 }
