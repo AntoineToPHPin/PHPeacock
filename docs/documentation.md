@@ -30,9 +30,8 @@
 5. [URL routing](#url-routing)
     1. [Implementation](#implementation-2)
         1. [In `public/bootstrap.php`](#in-publicbootstrapphp-1)
-        2. [In `src/domains/mydomain/routing/ExampleController.php`](#in-srcdomainsmydomainroutingexamplecontrollerphp)
-        3. [In `src/domains/mydomain/routing/ShowAllExamples.php`](#in-srcdomainsmydomainroutingshowallexamplesphp)
-        4. [In `src/domains/mydomain/routing/ShowExample.php`](#in-srcdomainsmydomainroutingshowexamplephp)
+        2. [In `src/domains/mydomain/routing/ShowAllExamples.php`](#in-srcdomainsmydomainroutingshowallexamplesphp)
+        3. [In `src/domains/mydomain/routing/ShowExample.php`](#in-srcdomainsmydomainroutingshowexamplephp)
     2. [Class diagram](#class-diagram-2)
 
 ## Directory structure
@@ -478,7 +477,12 @@ class SelectExample extends SelectEntity
 
 ## URL routing
 
-The URL routing triggers the right action according to the client request URI.
+The router triggers the right action, it compares the input request URI with each route’s request URI regex.
+
+If parameters are provided, the router adds the variables to the action HTTPRequest instance:
+
+* For a route request URI “example” and a “id” parameter equal to “1”, the router adds the GET variable “id” equal to “1”.
+* For a route request URI “example/([0-9]{1,3})”, a input request URI “example/3” and a “id” parameter equal to “$1”, the router adds the GET variable “id” equal to “3”.
 
 ### Implementation
 
@@ -494,61 +498,74 @@ The implementation may be as follow.
 
 $httpRequest = new HTTPRequest();
 
-$routeCollection = new RouteCollection(
-    new Route(
-        requestURI: 'examples',
-        controller: new ExampleController(
-            action: new ShowAllExamples(
-                dbmsConnection: $dbmsConnection,
-                httpRequest: $httpRequest,
-            ),
+$exampleRoutes = new RouteCollection(
+    new ExampleRoute(
+        requestURI: 'example(/.*){0,1}',
+        action: new Show404Example(
+            dbmsConnection: $dbmsConnection,
+            httpRequest: $httpRequest,
         ),
-    ),
-    new Route(
-        requestURI: 'example',
-        controller: new ExampleController(
-            action: new ShowExample(
-                dbmsConnection: $dbmsConnection,
-                httpRequest: $httpRequest,
+        childRoutes: new RouteCollection(
+            new ExampleRoute(
+                requestURI: 'example',
+                action: new ShowAllExamples(
+                    dbmsConnection: $dbmsConnection,
+                    httpRequest: $httpRequest,
+                ),
             ),
-        ),
-        uriVariables: ['id' => '1'],
-    ),
-    new Route(
-        requestURI: 'example/([0-9]{1,3})',
-        controller: new ExampleController(
-            action: new ShowExample(
-                dbmsConnection: $dbmsConnection,
-                httpRequest: $httpRequest,
+            new ExampleRoute(
+                requestURI: 'example/([0-9]{1,3})',
+                action: new ShowExample(
+                    dbmsConnection: $dbmsConnection,
+                    httpRequest: $httpRequest,
+                ),
+                parameters: new ParameterCollection(
+                    new Parameter(name: 'id', value: '$1'),
+                ),
             ),
-        ),
-        uriVariables: ['id' => '$1'],
+        )
     ),
 );
 
-$router = new Router(routeCollection: $routeCollection, httpRequest: $httpRequest);
-$controller = $router->getController();
-$controller->render();
+$example2Routes = new RouteCollection(
+    new Example2Route(
+        requestURI: 'example2(/.*){0,1}',
+        action: new Show404Example2(
+            dbmsConnection: $dbmsConnection,
+            httpRequest: $httpRequest,
+        ),
+        childRoutes: new RouteCollection(
+            new Example2Route(
+                requestURI: 'example2',
+                action: new ShowAllExample2s(
+                    dbmsConnection: $dbmsConnection,
+                    httpRequest: $httpRequest,
+                ),
+            ),
+            new Example2Route(
+                requestURI: 'example2/([0-9]{1,3})',
+                action: new ShowExample2(
+                    dbmsConnection: $dbmsConnection,
+                    httpRequest: $httpRequest,
+                ),
+                parameters: new ParameterCollection(
+                    new Parameter(name: 'id', value: '$1'),
+                ),
+            ),
+        )
+    ),
+);
+
+$mainRoutes = new RouteCollection(
+    ...$exampleRoutes,
+    ...$example2Routes,
+);
+
+$router = new Router(routeCollection: $mainRoutes, httpRequest: $httpRequest);
+$action = $router->getActionFromRoutes();
+$action->execute();
 
 // Some code…
-
-```
-
-#### In `src/domains/mydomain/routing/ExampleController.php`
-
-```php
-<?php
-namespace MyApp\Domains\Mydomain\Routing;
-
-use PHPeacock\Framework\Routing\Controller;
-
-class ExampleController extends Controller
-{
-    public function __construct(ExampleAction $action)
-    {
-        $this->action = $action;
-    }
-}
 
 ```
 
@@ -559,6 +576,8 @@ class ExampleController extends Controller
 namespace MyApp\Domains\Mydomain\Routing;
 
 use MyApp\Domains\Mydomain\SelectExample;
+use PHPeacock\Framework\Exceptions\Persistence\Entities\SelectEntityException;
+use PHPeacock\Framework\Exceptions\Routing\ExecuteActionException;
 
 class ShowAllExamples extends ExampleAction
 {
@@ -566,7 +585,17 @@ class ShowAllExamples extends ExampleAction
     {
         $selectExample = new SelectExample(dbmsConnection: $this->dbmsConnection);
 
-        $allExamples = $selectExample->selectAll();
+        try
+        {
+            $allExamples = $selectExample->selectAll();
+        }
+        catch (SelectEntityException $exception)
+        {
+            throw new ExecuteActionException(
+                message: 'An error occurs when executing an “Show all examples” action.',
+                previous: $exception
+            );
+        }
 
         // Some code…
     }
@@ -581,6 +610,8 @@ class ShowAllExamples extends ExampleAction
 namespace MyApp\Domains\Mydomain\Routing;
 
 use MyApp\Domains\Mydomain\SelectExample;
+use PHPeacock\Framework\Exceptions\Persistence\Entities\SelectEntityException;
+use PHPeacock\Framework\Exceptions\Routing\ExecuteActionException;
 
 class ShowExample extends ExampleAction
 {
@@ -588,7 +619,17 @@ class ShowExample extends ExampleAction
     {
         $selectExample = new SelectExample(dbmsConnection: $this->dbmsConnection);
 
-        $example = $selectExample->selectById(id: (int) $this->httpRequest->getGetVariableByName(name: 'id'));
+        try
+        {
+            $example = $selectExample->selectById(id: (int) $this->httpRequest->getGetVariableByName(name: 'id'));
+        }
+        catch (SelectEntityException $exception)
+        {
+            throw new ExecuteActionException(
+                message: 'An error occurs when executing an “Show example” action.',
+                previous: $exception
+            );
+        }
 
         // Some code…
     }
