@@ -2,36 +2,33 @@
 namespace PHPeacock\Framework\Routing;
 
 /**
- * Route between a request URI and a controller.
+ * Abstract route between a request URI and an action.
  */
-class Route
+abstract class Route
 {
     /**
      * Request URI.
      * @var string $requestURI
      */
+    protected string $requestURI;
 
     /**
-     * Controller.
-     * @var Controller $controller
+     * Action.
+     * @var Action $action
      */
+    protected Action $action;
 
     /**
-     * URI variables.
-     * @var array $uriVariables
+     * URI parameters.
+     * @var ParameterCollection|null $parameters
      */
+    protected ?ParameterCollection $parameters;
 
     /**
-     * @param string     $requestURI Request URI.
-     * @param Controller $controller Controller.
-     * @param array      $uriVariables URI variables.
+     * Child routes.
+     * @var RouteCollection|null $childRoutes
      */
-    public function __construct(
-        protected string $requestURI,
-        protected Controller $controller,
-        protected array $uriVariables = [],
-    )
-    { }
+    protected ?RouteCollection $childRoutes;
 
     /**
      * Returns the requestURI property.
@@ -56,46 +53,68 @@ class Route
     }
 
     /**
-     * Returns the controller property.
+     * Returns the action property.
      * 
-     * @return Controller
+     * @return Action
      */
-    public function getController(): Controller
+    public function getAction(): Action
     {
-        return $this->controller;
+        return $this->action;
     }
 
     /**
-     * Sets the controller property.
+     * Sets the action property.
      * 
-     * @param Controller $controller Controller.
+     * @param Action $action Action.
      * 
      * @return void
      */
-    public function setController(Controller $controller): void
+    public function setAction(Action $action): void
     {
-        $this->controller = $controller;
+        $this->action = $action;
     }
 
     /**
-     * Returns the uriVariables property.
+     * Returns the parameters property.
      * 
-     * @return array
+     * @return ParameterCollection|null
      */
-    public function getURIVariables(): array
+    public function getParameters(): ?ParameterCollection
     {
-        return $this->uriVariables;
+        return $this->parameters;
     }
 
     /**
-     * Sets the uriVariables property.
+     * Sets the parameters property.
      * 
-     * @param array $uriVariables URI variables.
+     * @param ParameterCollection|null $parameters URI parameters.
      * 
      * @return void
      */
-    public function setURIVariables(array $uriVariables): void
+    public function setParameters(?ParameterCollection $parameters): void
     {
-        $this->uriVariables = $uriVariables;
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * Returns the childRoutes property.
+     * 
+     * @return RouteCollection|null
+     */
+    public function getChildRoutes(): ?RouteCollection
+    {
+        return $this->childRoutes;
+    }
+
+    /**
+     * Sets the childRoutes property.
+     * 
+     * @param RouteCollection|null $childRoutes Child routes.
+     * 
+     * @return void
+     */
+    public function setChildRoutes(?RouteCollection $childRoutes): void
+    {
+        $this->childRoutes = $childRoutes;
     }
 }

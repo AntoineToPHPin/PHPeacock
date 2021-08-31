@@ -1,11 +1,11 @@
 <?php
 namespace PHPeacock\Framework\Routing;
 
-use PHPeacock\Framework\Exceptions\Routing\ControllerNotFoundException ;
+use PHPeacock\Framework\Exceptions\Routing\ActionNotFoundException;
 use PHPeacock\Framework\HTTP\HTTPRequest;
 
 /**
- * Returns the right controller according to the request URI.
+ * Returns the right action according to the request URI.
  */
 class Router
 {
@@ -30,47 +30,115 @@ class Router
     { }
 
     /**
-     * Returns the right controller from the route collection.
+     * Returns the right action from the route collection (or child routes).
      * 
      * The router compares the input request URI with each route’s request URI regex.
-     * If URI variables are provided, the router adds the variables to the HTTPRequest
-     * instance (regex capturing group can be used).
      * 
-     * @throws ControllerNotFoundException if there is no route for the request URI.
+     * If parameters are provided, the router adds the variables to the action HTTPRequest
+     * instance.
      * 
-     * @return Controller
+     * * Simple example:
+     * 
+     * For a route request URI “example” and a “id” parameter equal to “1”, the router adds
+     * the GET variable “id” equal to “1”.
+     * 
+     * * Example with regex capturing group:
+     * 
+     * For a route request URI “example/([0-9]{1,3})”, a input request URI “example/3” and
+     * a “id” parameter equal to “$1”, the router adds the GET variable “id” equal to “3”.
+     * 
+     * @throws ActionNotFoundException if there is no matched route for the request URI.
+     * 
+     * @return Action
      */
-    public function getController(): Controller
+    public function getActionFromRoutes(): Action
     {
-        $requestURI = $this->httpRequest->getGetVariableByName(name: 'requestURI');
+        $matchedRoute = $this->getMatchedRoute();
+
+        if (isset($matchedRoute))
+        {
+            if ($matchedRoute->getParameters() !== null)
+            {
+                $this->addParametersToHTTPRequest(route: $matchedRoute);
+            }
+
+            $action = $matchedRoute->getAction();
+
+            return $action;
+        }
+        else
+        {
+            throw new ActionNotFoundException(message: 'The request URI has no match.');
+        }
+    }
+
+    /**
+     * Returns the right route from the route collection (or child routes).
+     * 
+     * @see getActionFromRoutes
+     * 
+     * @return Route|null
+     */
+    protected function getMatchedRoute(): ?Route
+    {
+        $inputRequestURI = $this->httpRequest->getGetVariableByName(name: 'requestURI');
 
         foreach ($this->routeCollection as $route)
         {
             $regexPattern = '~^' . $route->getRequestURI() . '/?$~i';
 
-            if (preg_match(
+            $doesThisRouteMatch = (bool) preg_match(
                 pattern: $regexPattern,
-                subject: $requestURI,
-            ))
-            {
-                $controller = $route->getController();
+                subject: $inputRequestURI,
+            );
 
-                foreach ($route->getURIVariables() as $key => $value)
+            if ($doesThisRouteMatch)
+            {
+                $childRoutes = $route->getChildRoutes();
+
+                if (isset($childRoutes))
                 {
-                    $controller->getAction()->getHTTPRequest()->addGetVariable(
-                        name: $key,
-                        value: preg_replace(
-                            pattern: $regexPattern,
-                            replacement: $value,
-                            subject: $requestURI,
-                        )
-                    );
+                    $this->routeCollection = $childRoutes;
+
+                    $childRoute = $this->getMatchedRoute();
+
+                    if (isset($childRoute))
+                    {
+                        $route = $childRoute;
+                    }
                 }
 
-                return $controller;
+                return $route;
             }
         }
 
-        throw new ControllerNotFoundException(message: 'The request URI has no match.');
+        return null;
+    }
+
+    /**
+     * Adds the route parameters to its action HTTPRequest instance (regex capturing group can be used).
+     * 
+     * @see getActionFromRoutes
+     * 
+     * @param Route $route Route between a request URI and an action.
+     * 
+     * @return void
+     */
+    protected function addParametersToHTTPRequest(Route $route): void
+    {
+        $inputRequestURI = $this->httpRequest->getGetVariableByName(name: 'requestURI');
+        $regexPattern = '~^' . $route->getRequestURI() . '/?$~i';
+
+        foreach ($route->getParameters() as $parameter)
+        {
+            $route->getAction()->getHTTPRequest()->addGetVariable(
+                name: $parameter->getName(),
+                value: preg_replace(
+                    pattern: $regexPattern,
+                    replacement: $parameter->getValue(),
+                    subject: $inputRequestURI,
+                )
+            );
+        }
     }
 }

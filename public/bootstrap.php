@@ -6,7 +6,8 @@ use PHPeacock\Autoloader;
 use PHPeacock\Framework\HTTP\HTTPRequest;
 use PHPeacock\Framework\Persistence\Connections\Database;
 use PHPeacock\Framework\Persistence\Connections\MySQLConnection;
-use PHPeacock\Framework\Routing\Route;
+use PHPeacock\Framework\Routing\Parameter;
+use PHPeacock\Framework\Routing\ParameterCollection;
 use PHPeacock\Framework\Routing\RouteCollection;
 use PHPeacock\Framework\Routing\Router;
 
@@ -31,5 +32,5 @@ $routeCollection = new RouteCollection(
 );
 
 $router = new Router(routeCollection: $routeCollection, httpRequest: $httpRequest);
-$controller = $router->getController();
-$controller->render();
+$action = $router->getActionFromRoutes();
+$action->execute();
