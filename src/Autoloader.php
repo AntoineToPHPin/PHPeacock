@@ -8,6 +8,7 @@ use PHPeacock\Framework\Exceptions\Autoloader\ClassNotFoundException;
  * 
  * This autoloader deals with classes in `src` folder.
  * Their namespace must follow their path into `src`, and begin with the application name.
+ * It is case-sensitive.
  */
 class Autoloader
 {
@@ -38,14 +39,7 @@ class Autoloader
         $path = [];
         for ($i = 1; $i < $nameFragmentsLength; $i++)
         {
-            if ($i === $nameFragmentsLength - 1)
-            {
-                $path[] = $nameFragments[$i];
-            }
-            else
-            {
-                $path[] = strtolower(string: $nameFragments[$i]);
-            }
+            $path[] = $nameFragments[$i];
         }
 
         $file = implode(separator: DIRECTORY_SEPARATOR, array: $path) . '.php';

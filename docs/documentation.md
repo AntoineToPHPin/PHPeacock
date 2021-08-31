@@ -21,8 +21,8 @@
 4. [Persistence](#persistence)
     1. [Implementation](#implementation-1)
         1. [In `public/bootstrap.php`](#in-publicbootstrapphp)
-        2. [In `src/domains/mydomain/Example.php`](#in-srcdomainsmydomainexamplephp)
-        3. [In `src/domains/mydomain/SelectExample.php`](#in-srcdomainsmydomainselectexamplephp)
+        2. [In `src/Domains/MyDomain/Example.php`](#in-srcdomainsmydomainexamplephp)
+        3. [In `src/Domains/MyDomain/SelectExample.php`](#in-srcdomainsmydomainselectexamplephp)
     2. [Class diagrams](#class-diagrams)
         1. [Database connections](#database-connections)
         2. [SQL queries](#sql-queries)
@@ -30,8 +30,8 @@
 5. [URL routing](#url-routing)
     1. [Implementation](#implementation-2)
         1. [In `public/bootstrap.php`](#in-publicbootstrapphp-1)
-        2. [In `src/domains/mydomain/routing/ShowAllExamples.php`](#in-srcdomainsmydomainroutingshowallexamplesphp)
-        3. [In `src/domains/mydomain/routing/ShowExample.php`](#in-srcdomainsmydomainroutingshowexamplephp)
+        2. [In `src/Domains/MyDomain/Routing/ShowAllExamples.php`](#in-srcdomainsmydomainroutingshowallexamplesphp)
+        3. [In `src/Domains/MyDomain/Routing/ShowExample.php`](#in-srcdomainsmydomainroutingshowexamplephp)
     2. [Class diagram](#class-diagram-2)
 
 ## Directory structure
@@ -119,11 +119,11 @@ _Example with `Example.php`_:
     |   └── framework/
     […]
 
-If `Example.php` is in MyApp/src/domains/mydomain, its namespace must be “MyApp\Domains\Mydomain”, as below.
+If `Example.php` is in MyApp/src/Domains/MyDomain, its namespace must be “MyApp\Domains\MyDomain”, as below.
 
 ```php
 <?php
-namespace MyApp\Domains\Mydomain;
+namespace MyApp\Domains\MyDomain;
 
 /**
  * Description
@@ -155,7 +155,7 @@ Each `Collection` child must override the parent constructor to control the para
 
 ```php
 <?php
-namespace MyApp\Domains\Mydomain;
+namespace MyApp\Domains\MyDomain;
 
 use PHPeacock\Framework\Structures\Collection;
 
@@ -217,11 +217,11 @@ $dbmsConnection = new MySQLConnection(database: $database); // Or any other DBMS
 
 ```
 
-#### In `src/domains/mydomain/Example.php`
+#### In `src/Domains/MyDomain/Example.php`
 
 ```php
 <?php
-namespace MyApp\Domains\Mydomain;
+namespace MyApp\Domains\MyDomain;
 
 // use…
 
@@ -327,11 +327,11 @@ class Example extends Entity
 
 ```
 
-#### In `src/domains/mydomain/SelectExample.php`
+#### In `src/Domains/MyDomain/SelectExample.php`
 
 ```php
 <?php
-namespace MyApp\Domains\Mydomain;
+namespace MyApp\Domains\MyDomain;
 
 // use…
 
@@ -569,13 +569,13 @@ $action->execute();
 
 ```
 
-#### In `src/domains/mydomain/routing/ShowAllExamples.php`
+#### In `src/Domains/MyDomain/Routing/ShowAllExamples.php`
 
 ```php
 <?php
-namespace MyApp\Domains\Mydomain\Routing;
+namespace MyApp\Domains\MyDomain\Routing;
 
-use MyApp\Domains\Mydomain\SelectExample;
+use MyApp\Domains\MyDomain\SelectExample;
 use PHPeacock\Framework\Exceptions\Persistence\Entities\SelectEntityException;
 use PHPeacock\Framework\Exceptions\Routing\ExecuteActionException;
 
@@ -603,13 +603,13 @@ class ShowAllExamples extends ExampleAction
 
 ```
 
-#### In `src/domains/mydomain/routing/ShowExample.php`
+#### In `src/Domains/MyDomain/Routing/ShowExample.php`
 
 ```php
 <?php
-namespace MyApp\Domains\Mydomain\Routing;
+namespace MyApp\Domains\MyDomain\Routing;
 
-use MyApp\Domains\Mydomain\SelectExample;
+use MyApp\Domains\MyDomain\SelectExample;
 use PHPeacock\Framework\Exceptions\Persistence\Entities\SelectEntityException;
 use PHPeacock\Framework\Exceptions\Routing\ExecuteActionException;
 
