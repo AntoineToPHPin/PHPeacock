@@ -6,12 +6,8 @@ PHPeacock is a light and easy-to-use PHP framework for web applications.
 
 ## Documentation
 
-1. [Filesystem skeleton](docs/Skeleton.md)
+You can read the [PHPeacock documentation](docs/documentation).
 
-2. [Autoloader](docs/AutoloaderClass.md)
+## License
 
-3. [Collections](docs/CollectionClasses.md)
-
-4. [Persistence](docs/Persistence.md)
-
-5. [URL routing](docs/URLRouting.md)
+PHPeacock is licensed under the [MIT license](LICENSE).
