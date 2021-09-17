@@ -4,7 +4,7 @@ namespace PHPeacock\Framework\DOM;
 use PHPeacock\Framework\Exceptions\DOM\DOMTextException;
 
 /**
- * Abstract DOM Text node.
+ * Abstract DOM text node.
  */
 abstract class DOMText implements DOMNode
 {
