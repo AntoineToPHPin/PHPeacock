@@ -9,7 +9,7 @@ interface DOMNode
     /**
      * Creates the node.
      * 
-     * @throws DOMNodeException ih an error occurs when creating the node.
+     * @throws DOMNodeException if an error occurs when creating the node.
      * 
      * @return \DOMNode
      */
