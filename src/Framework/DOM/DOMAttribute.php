@@ -23,6 +23,8 @@ abstract class DOMAttribute
     /**
      * @param string $name  Attribute name.
      * @param string $value Attribute value.
+     * 
+     * @throws DOMAttributeException if the attribute has a non allowed character.
      */
     public function __construct(string $name, string $value)
     {
@@ -44,6 +46,8 @@ abstract class DOMAttribute
      * Sets the name property.
      * 
      * @param string $name Attribute name.
+     * 
+     * @throws DOMAttributeException if the attribute has a non allowed character.
      * 
      * @return void
      */
