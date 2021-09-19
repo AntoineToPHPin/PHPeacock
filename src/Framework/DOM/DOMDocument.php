@@ -21,4 +21,11 @@ abstract class DOMDocument implements \Stringable
     {
         return $this->elements;
     }
+
+    /**
+     * @throws DOMDocumentException if an error occurs when creating the child nodes.
+     * 
+     * @return string
+     */
+    abstract public function __toString(): string;
 }
