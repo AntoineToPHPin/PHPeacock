@@ -95,6 +95,8 @@ abstract class DOMElement implements DOMNode
      * 
      * @param string $name Attribute name.
      * 
+     * @throws DOMElementException if the element has a non allowed character.
+     * 
      * @return void
      */
     public function setName(string $name): void
