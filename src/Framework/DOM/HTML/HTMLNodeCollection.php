@@ -19,7 +19,7 @@ class HTMLNodeCollection extends DOMNodeCollection
     /**
      * Adds the HTML node to the collection.
      * 
-     * @param HTMLNode $htmlNode HTML node to add.
+     * @param HTMLNode $htmlNode HTML node to add.
      * 
      * @return self
      */
@@ -30,9 +30,9 @@ class HTMLNodeCollection extends DOMNodeCollection
     }
 
     /**
-     * Removes the HTML node from the collection.
+     * Removes the HTML node from the collection.
      * 
-     * @param HTMLNode $htmlNode HTML node to remove.
+     * @param HTMLNode $htmlNode HTML node to remove.
      * 
      * @return self
      */
