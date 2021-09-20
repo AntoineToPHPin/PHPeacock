@@ -30,7 +30,7 @@ class ParameterCollection extends Collection
     }
 
     /**
-     * Removes the parameter to the collection.
+     * Removes the parameter from the collection.
      * 
      * @param Parameter $parameters Parameter to remove.
      * 
