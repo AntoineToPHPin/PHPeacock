@@ -3,6 +3,7 @@ namespace PHPeacock\Framework\Routing;
 
 use PHPeacock\Framework\HTTP\HTTPRequest;
 use PHPeacock\Framework\Persistence\Connections\DBMSConnection;
+use PHPeacock\Framework\Template\Template;
 
 /**
  * Abstract action.
@@ -34,9 +35,9 @@ abstract class Action
      * 
      * @throws ExecuteActionException if an error occurs when the action was executed.
      * 
-     * @return void
+     * @return Template
      */
-    abstract public function execute(): void;
+    abstract public function execute(): Template;
 
     /**
      * Returns the dbmsConnection property.
