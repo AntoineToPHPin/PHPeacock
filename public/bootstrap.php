@@ -33,4 +33,5 @@ $routeCollection = new RouteCollection(
 
 $router = new Router(routeCollection: $routeCollection, httpRequest: $httpRequest);
 $action = $router->getActionFromRoutes();
-$action->execute();
+$template = $action->execute();
+$template->display();
