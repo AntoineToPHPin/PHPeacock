@@ -67,6 +67,9 @@ class XMLElementsBuilder extends DOMElementsBuilder
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function addAttribute(string $name, string $value): self
     {
         try
@@ -87,6 +90,9 @@ class XMLElementsBuilder extends DOMElementsBuilder
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function addContent(string $text): self
     {
         $element = new XMLText(text: $text);
