@@ -21,8 +21,8 @@
 4. [Persistence](#persistence)
     1. [Implementation](#implementation-1)
         1. [In `public/bootstrap.php`](#in-publicbootstrapphp)
-        2. [In `src/Domains/MyDomain/Example.php`](#in-srcdomainsmydomainexamplephp)
-        3. [In `src/Domains/MyDomain/SelectExample.php`](#in-srcdomainsmydomainselectexamplephp)
+        2. [In `src/Domains/MyDomain/Entities/Example.php`](#in-srcdomainsmydomainentitiesexamplephp)
+        3. [In `src/Domains/MyDomain/Entities/SelectExample.php`](#in-srcdomainsmydomainentitiesselectexamplephp)
     2. [Class diagrams](#class-diagrams)
         1. [Database connections](#database-connections)
         2. [SQL queries](#sql-queries)
@@ -30,9 +30,11 @@
 5. [URL routing](#url-routing)
     1. [Implementation](#implementation-2)
         1. [In `public/bootstrap.php`](#in-publicbootstrapphp-1)
-        2. [In `src/Domains/MyDomain/Routing/ShowAllExamples.php`](#in-srcdomainsmydomainroutingshowallexamplesphp)
-        3. [In `src/Domains/MyDomain/Routing/ShowExample.php`](#in-srcdomainsmydomainroutingshowexamplephp)
+        2. [In `src/Domains/MyDomain/Actions/ShowAllExamples.php`](#in-srcdomainsmydomainactionsshowallexamplesphp)
+        3. [In `src/Domains/MyDomain/Templates/AllExamplesTemplate.php`](#in-srcdomainsmydomaintemplatesallexamplestemplatephp)
     2. [Class diagram](#class-diagram-2)
+        1. [Routing](#routing)
+        2. [Template](#template)
 
 ## Directory structure
 
@@ -112,18 +114,19 @@ _Example with `Example.php`_:
     |
     […]
     ├── src/
-    |   ├── domains/
-    |   |   ├── mydomain/
-    |   |   |   └── Example.php
-    |   |   └── otherdomain/
-    |   └── framework/
+    |   ├── Domains/
+    |   |   ├── MyDomain/
+    |   |   |   └── Entities/
+    |   |   |       └── Example.php
+    |   |   └── OtherDomain/
+    |   └── Framework/
     […]
 
-If `Example.php` is in MyApp/src/Domains/MyDomain, its namespace must be “MyApp\Domains\MyDomain”, as below.
+If `Example.php` is in MyApp/src/Domains/MyDomain/Entities, its namespace must be “MyApp\Domains\MyDomain\Entities”, as below.
 
 ```php
 <?php
-namespace MyApp\Domains\MyDomain;
+namespace MyApp\Domains\MyDomain\Entities;
 
 /**
  * Description
@@ -155,7 +158,7 @@ Each `Collection` child must override the parent constructor to control the para
 
 ```php
 <?php
-namespace MyApp\Domains\MyDomain;
+namespace MyApp\Domains\MyDomain\Entities;
 
 use PHPeacock\Framework\Structures\Collection;
 
@@ -217,11 +220,11 @@ $dbmsConnection = new MySQLConnection(database: $database); // Or any other DBMS
 
 ```
 
-#### In `src/Domains/MyDomain/Example.php`
+#### In `src/Domains/MyDomain/Entities/Example.php`
 
 ```php
 <?php
-namespace MyApp\Domains\MyDomain;
+namespace MyApp\Domains\MyDomain\Entities;
 
 // use…
 
@@ -327,11 +330,11 @@ class Example extends Entity
 
 ```
 
-#### In `src/Domains/MyDomain/SelectExample.php`
+#### In `src/Domains/MyDomain/Entities/SelectExample.php`
 
 ```php
 <?php
-namespace MyApp\Domains\MyDomain;
+namespace MyApp\Domains\MyDomain\Entities;
 
 // use…
 
@@ -563,25 +566,22 @@ $mainRoutes = new RouteCollection(
 
 $router = new Router(routeCollection: $mainRoutes, httpRequest: $httpRequest);
 $action = $router->getActionFromRoutes();
-$action->execute();
-
-// Some code…
+$template = $action->execute();
+$template->display();
 
 ```
 
-#### In `src/Domains/MyDomain/Routing/ShowAllExamples.php`
+#### In `src/Domains/MyDomain/Actions/ShowAllExamples.php`
 
 ```php
 <?php
-namespace MyApp\Domains\MyDomain\Routing;
+namespace MyApp\Domains\MyDomain\Actions;
 
-use MyApp\Domains\MyDomain\SelectExample;
-use PHPeacock\Framework\Exceptions\Persistence\Entities\SelectEntityException;
-use PHPeacock\Framework\Exceptions\Routing\ExecuteActionException;
+// use…
 
 class ShowAllExamples extends ExampleAction
 {
-    public function execute(): void
+    public function execute(): AllExamplesTemplate
     {
         $selectExample = new SelectExample(dbmsConnection: $this->dbmsConnection);
 
@@ -597,41 +597,74 @@ class ShowAllExamples extends ExampleAction
             );
         }
 
-        // Some code…
+        return new AllExamplesTemplate(examples: $allExamples);
     }
 }
 
 ```
 
-#### In `src/Domains/MyDomain/Routing/ShowExample.php`
+#### In `src/Domains/MyDomain/Templates/AllExamplesTemplate.php`
 
 ```php
 <?php
-namespace MyApp\Domains\MyDomain\Routing;
+namespace MyApp\Domains\MyDomain\Templates;
 
-use MyApp\Domains\MyDomain\SelectExample;
-use PHPeacock\Framework\Exceptions\Persistence\Entities\SelectEntityException;
-use PHPeacock\Framework\Exceptions\Routing\ExecuteActionException;
+// use…
 
-class ShowExample extends ExampleAction
+class AllExamplesTemplate extends Template
 {
-    public function execute(): void
+    public function __construct(ExampleCollection $examples)
     {
-        $selectExample = new SelectExample(dbmsConnection: $this->dbmsConnection);
+        $builder = (new HTMLElementsBuilder)
+            ->openElement('html')
+                ->addAttribute(name: 'lang', value: 'en')
+                ->openElement(name: 'head')
+                    ->openElement(name: 'meta')
+                        ->addAttribute(name: 'charset', value: 'UTF-8')
+                    ->closeElement(name: 'meta')
+                    ->openElement(name: 'meta')
+                        ->addAttribute(name: 'http-equiv', value: 'X-UA-Compatible')
+                        ->addAttribute(name: 'content', value: 'IE=edge')
+                    ->closeElement(name: 'meta')
+                    ->openElement(name: 'meta')
+                        ->addAttribute(name: 'name', value: 'viewport')
+                        ->addAttribute(name: 'content', value: 'width=device-width, initial-scale=1.0')
+                    ->closeElement(name: 'meta')
+                    ->openElement(name: 'title', value: 'Examples list')->closeElement(name: 'title')
+                    ->openElement(name: 'link')
+                        ->addAttribute(name: 'rel', value: 'stylesheet')
+                        ->addAttribute(name: 'href', value: '/css/examples.css')
+                    ->closeElement(name: 'link')
+                ->closeElement(name: 'head')
 
-        try
+                ->openElement(name: 'body')
+                    ->openElement(name: 'h1', value: 'Examples :')->closeElement(name: 'h1')
+        ;
+
+        foreach ($examples as $example)
         {
-            $example = $selectExample->selectById(id: (int) $this->httpRequest->getGetVariableByName(name: 'id'));
-        }
-        catch (SelectEntityException $exception)
-        {
-            throw new ExecuteActionException(
-                message: 'An error occurs when executing an “Show example” action.',
-                previous: $exception
-            );
+            $builder
+                    ->openElement(name: 'p')
+                        ->addContent(text: 'field1 : ' . $example->getField1() . ', field2 : ' . $example->getField2() . ' ')
+                        ->openElement(name: 'a')
+                            ->addAttribute(name: 'href', value: $example->getId())
+                            ->addContent(text: 'Details')
+                        ->closeElement(name: 'a')
+                        ->addContent(text: ' ')
+                        ->openElement(name: 'a')
+                            ->addAttribute(name: 'href', value: 'remove/' . $example->getId())
+                            ->addContent(text: 'Remove')
+                        ->closeElement(name: 'a')
+                    ->closeElement(name: 'p')
+            ;
         }
 
-        // Some code…
+        $builder
+                ->closeElement(name: 'body')
+            ->closeElement(name: 'html')
+        ;
+
+        parent::__construct(elements: $builder->getElements());
     }
 }
 
@@ -639,6 +672,12 @@ class ShowExample extends ExampleAction
 
 ### Class diagram
 
+#### Routing
+
 ![URL routing UML class diagram](uml/routing.svg)
+
+#### Template
+
+![Template UML class diagram](uml/template.svg)
 
 [⬆️ Table of contents](#table-of-contents)
