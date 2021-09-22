@@ -19,7 +19,7 @@ class ParameterCollection extends Collection
     /**
      * Adds the parameter to the collection.
      * 
-     * @param Parameter $parameters Parameter to add.
+     * @param Parameter $parameter Parameter to add.
      * 
      * @return self
      */
@@ -30,9 +30,9 @@ class ParameterCollection extends Collection
     }
 
     /**
-     * Removes the parameter to the collection.
+     * Removes the parameter from the collection.
      * 
-     * @param Parameter $parameters Parameter to remove.
+     * @param Parameter $parameter Parameter to remove.
      * 
      * @return self
      */

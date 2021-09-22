@@ -4,7 +4,7 @@ namespace PHPeacock\Framework\Structures;
 /**
  * Abstract collection of elements.
  */
-abstract class Collection implements \Iterator
+abstract class Collection implements \Iterator, \Countable
 {
     /**
      * Elements storage.
