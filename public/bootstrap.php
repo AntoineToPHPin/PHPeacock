@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PHPeacock\Autoloader;
 use PHPeacock\Framework\HTTP\HTTPRequest;
+use PHPeacock\Framework\HTTP\HTTPResponse;
 use PHPeacock\Framework\Persistence\Connections\Database;
 use PHPeacock\Framework\Persistence\Connections\MySQLConnection;
 use PHPeacock\Framework\Routing\Parameter;
@@ -26,6 +27,7 @@ $database = new Database(
 $dbmsConnection = new MySQLConnection(database: $database); // Or any other DBMSConnection child
 
 $httpRequest = new HTTPRequest();
+$httpResponse = new HTTPResponse(url: $config['url']);
 
 $routeCollection = new RouteCollection(
     // Some routes…
@@ -34,4 +36,4 @@ $routeCollection = new RouteCollection(
 $router = new Router(routeCollection: $routeCollection, httpRequest: $httpRequest);
 $action = $router->getActionFromRoutes();
 $template = $action->execute();
-$template->display();
+$template?->display();
