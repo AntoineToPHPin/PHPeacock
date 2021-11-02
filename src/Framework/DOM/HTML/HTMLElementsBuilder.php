@@ -70,7 +70,7 @@ class HTMLElementsBuilder extends DOMElementsBuilder
     /**
      * {@inheritDoc}
      */
-    public function addAttribute(string $name, string $value): self
+    public function addAttribute(string $name, string $value = ''): self
     {
         try
         {

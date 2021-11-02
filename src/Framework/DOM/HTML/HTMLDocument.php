@@ -6,9 +6,9 @@ use PHPeacock\Framework\Exceptions\DOM\DOMDocumentException;
 use PHPeacock\Framework\Exceptions\DOM\DOMNodeException;
 
 /**
- * HTML document.
+ * Abstract HTML document.
  */
-class HTMLDocument extends DOMDocument
+abstract class HTMLDocument extends DOMDocument
 {
     /**
      * @param HTMLElementCollection $elements Document elements.
