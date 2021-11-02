@@ -480,7 +480,7 @@ class SelectExample extends SelectEntity
 
 ## URL routing
 
-The router triggers the right action, it compares the input request URI with each route’s request URI regex. If a route matche
+The router triggers the right action, it compares the input request URI with each route’s request URI regex.
 
 If parameters are provided, the router adds the variables to the action HTTPRequest instance:
 
