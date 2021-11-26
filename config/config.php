@@ -8,4 +8,5 @@ return [
         'password' => '',
     ],
     'url' => '',
+    'debugMode' => false,
 ];

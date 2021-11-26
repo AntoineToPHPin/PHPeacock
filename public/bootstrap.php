@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
 
 use PHPeacock\Autoloader;
 use PHPeacock\Framework\HTTP\HTTPRequest;
@@ -16,6 +18,21 @@ require_once '../src/Autoloader.php';
 (new Autoloader)->register();
 
 $config = require_once '../config/config.php';
+
+if ($config['debugMode'])
+{
+    ini_set(option: 'display_errors', value: 'On');
+    ini_set(option: 'display_startup_errors', value: 'On');
+    ini_set(option: 'error_reporting', value: '-1');
+    ini_set(option: 'log_errors', value: 'On');
+}
+else
+{
+    ini_set(option: 'display_errors', value: 'Off');
+    ini_set(option: 'display_startup_errors', value: 'Off');
+    ini_set(option: 'error_reporting', value: '-1');
+    ini_set(option: 'log_errors', value: 'On');
+}
 
 $database = new Database(
     host: $config['database']['host'],
