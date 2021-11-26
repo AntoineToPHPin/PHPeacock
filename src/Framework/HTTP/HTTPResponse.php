@@ -7,14 +7,30 @@ namespace PHPeacock\Framework\HTTP;
 class HTTPResponse
 {
     /**
-     * Website URL.
-     * @var string $url
+     * Website base URL.
+     * @var string $baseURL
      */
 
     /**
-     * @param string $url Website URL.
+     * Website 404 path.
+     * @var string $path404
      */
-    public function __construct(protected string $url)
+
+    /**
+     * Website 500 path.
+     * @var string $path500
+     */
+
+    /**
+     * @param string $baseURL Website base URL.
+     * @param string $path404 Website 404 path.
+     * @param string $path500 Website 500 path.
+     */
+    public function __construct(
+        protected string $baseURL,
+        protected string $path404,
+        protected string $path500,
+    )
     { }
 
     /**
@@ -30,7 +46,7 @@ class HTTPResponse
     }
 
     /**
-     * Redirects to a different URL.
+     * Redirects to a different path.
      * 
      * @param string $requestURI     Request URI.
      * @param int    $httpStatusCode HTTP status code.
@@ -39,8 +55,28 @@ class HTTPResponse
      */
     public function redirect(string $requestURI, int $httpStatusCode = 303): void
     {
-        header('Location: ' . $this->url . $requestURI, response_code: $httpStatusCode);
+        header('Location: ' . $this->getBaseURL() . $requestURI, response_code: $httpStatusCode);
         exit;
+    }
+
+    /**
+     * Redirects to the 404 path.
+     * 
+     * @return void
+     */
+    public function redirect404(): void
+    {
+        $this->redirect(requestURI: $this->getPath404());
+    }
+
+    /**
+     * Redirects to the 500 path.
+     * 
+     * @return void
+     */
+    public function redirect500(): void
+    {
+        $this->redirect(requestURI: $this->getPath500());
     }
 
     /**
@@ -58,24 +94,32 @@ class HTTPResponse
     }
 
     /**
-     * Returns the url property.
+     * Returns the baseURL property.
      * 
      * @return string
      */
-    public function getURL(): string
+    public function getBaseURL(): string
     {
-        return $this->url;
+        return $this->baseURL;
     }
 
     /**
-     * Sets the url property.
+     * Returns the path404 property.
      * 
-     * @param string $url Website URL.
-     * 
-     * @return void
+     * @return string
      */
-    public function setURL(string $url): void
+    public function getPath404(): string
     {
-        $this->url = $url;
+        return $this->path404;
+    }
+
+    /**
+     * Returns the path500 property.
+     * 
+     * @return string
+     */
+    public function getPath500(): string
+    {
+        return $this->path500;
     }
 }

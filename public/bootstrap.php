@@ -34,6 +34,13 @@ else
     ini_set(option: 'log_errors', value: 'On');
 }
 
+$httpRequest = new HTTPRequest();
+$httpResponse = new HTTPResponse(
+    baseURL: $config['url']['baseURL'],
+    path404: $config['url']['404'],
+    path500: $config['url']['500'],
+);
+
 $database = new Database(
     host: $config['database']['host'],
     name: $config['database']['name'],
@@ -42,9 +49,6 @@ $database = new Database(
 );
 
 $dbmsConnection = new MySQLConnection(database: $database); // Or any other DBMSConnection child
-
-$httpRequest = new HTTPRequest();
-$httpResponse = new HTTPResponse(url: $config['url']);
 
 $routeCollection = new RouteCollection(
     // Some routes…
