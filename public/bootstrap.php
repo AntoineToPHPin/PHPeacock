@@ -5,6 +5,7 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 use PHPeacock\Autoloader;
+use PHPeacock\Framework\Exceptions\Routing\ActionNotFoundException;
 use PHPeacock\Framework\HTTP\HTTPRequest;
 use PHPeacock\Framework\HTTP\HTTPResponse;
 use PHPeacock\Framework\Persistence\Connections\Database;
@@ -55,6 +56,15 @@ $routeCollection = new RouteCollection(
 );
 
 $router = new Router(routeCollection: $routeCollection, httpRequest: $httpRequest);
+try
+{
+    $action = $router->getActionFromRoutes();
+}
+catch (ActionNotFoundException $exception)
+{
+    $httpResponse->redirect404();
+}
+
 $action = $router->getActionFromRoutes();
 $template = $action->execute();
 $template?->display();
