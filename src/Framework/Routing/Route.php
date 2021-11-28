@@ -16,7 +16,7 @@ abstract class Route
      * Action.
      * @var Action $action
      */
-    protected Action $action;
+    protected ?Action $action;
 
     /**
      * URI parameters.
@@ -57,7 +57,7 @@ abstract class Route
      * 
      * @return Action
      */
-    public function getAction(): Action
+    public function getAction(): ?Action
     {
         return $this->action;
     }
