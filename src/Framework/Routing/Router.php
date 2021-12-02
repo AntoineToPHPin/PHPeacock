@@ -64,12 +64,13 @@ class Router
 
             $action = $matchedRoute->getAction();
 
-            return $action;
+            if (isset($action))
+            {
+                return $action;
+            }
         }
-        else
-        {
-            throw new ActionNotFoundException(message: 'The request URI has no match.');
-        }
+
+        throw new ActionNotFoundException(message: 'The request URI has no match.');
     }
 
     /**

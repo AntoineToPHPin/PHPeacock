@@ -7,5 +7,10 @@ return [
         'user' => '',
         'password' => '',
     ],
-    'url' => '',
+    'url' => [
+        'baseURL' => '',
+        '404' => '',
+        '500' => '',
+    ],
+    'debugMode' => false,
 ];
