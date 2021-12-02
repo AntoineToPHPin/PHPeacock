@@ -2,7 +2,7 @@
 namespace PHPeacock\Framework\Exceptions\Error;
 
 /**
- * Abstract error exception
+ * Abstract error exception.
  */
 abstract class Error extends \ErrorException
 {

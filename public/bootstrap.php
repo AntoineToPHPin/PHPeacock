@@ -5,6 +5,7 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 use PHPeacock\Autoloader;
+use PHPeacock\Framework\Exceptions\ErrorHandler;
 use PHPeacock\Framework\Exceptions\ExceptionAndErrorHandler;
 use PHPeacock\Framework\Exceptions\Persistence\Connections\NoResultsException;
 use PHPeacock\Framework\Exceptions\Routing\ActionNotFoundException;
@@ -46,6 +47,7 @@ $httpResponse = new HTTPResponse(
 );
 
 (new ExceptionAndErrorHandler(httpResponse: $httpResponse))->register();
+(new ErrorHandler(httpResponse: $httpResponse))->register();
 
 $database = new Database(
     host: $config['database']['host'],
