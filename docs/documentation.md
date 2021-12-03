@@ -484,8 +484,8 @@ The router triggers the right action, it compares the input request URI with eac
 
 If parameters are provided, the router adds the variables to the action HTTPRequest instance:
 
-* For a route request URI “example” and a “id” parameter equal to “1”, the router adds the GET variable “id” equal to “1”.
 * For a route request URI “example/([0-9]{1,3})”, a input request URI “example/3” and a “id” parameter equal to “$1”, the router adds the GET variable “id” equal to “3”.
+* For a route request URI “example” and a “id” parameter equal to “1”, the router adds the GET variable “id” equal to “1”.
 
 ### Implementation
 
@@ -500,76 +500,99 @@ The implementation may be as follow.
 // database…
 
 $httpRequest = new HTTPRequest();
+$httpResponse = new HTTPResponse(url: $config['url']);
 
-$exampleRoutes = new RouteCollection(
-    new ExampleRoute(
-        requestURI: 'example(/.*){0,1}',
-        action: new Show404Example(
-            dbmsConnection: $dbmsConnection,
-            httpRequest: $httpRequest,
+$exampleRoutes = new ExampleRoute(
+    requestURI: 'example(/.*)?',
+    action: new Show404Example(
+        dbmsConnection: $dbmsConnection,
+        httpRequest: $httpRequest,
+        httpResponse: $httpResponse,
+    ),
+    childRoutes: new RouteCollection(
+        new ExampleRoute(
+            requestURI: 'example',
+            action: new ShowAllExamples(
+                dbmsConnection: $dbmsConnection,
+                httpRequest: $httpRequest,
+                httpResponse: $httpResponse,
+            ),
         ),
-        childRoutes: new RouteCollection(
-            new ExampleRoute(
-                requestURI: 'example',
-                action: new ShowAllExamples(
-                    dbmsConnection: $dbmsConnection,
-                    httpRequest: $httpRequest,
-                ),
+        new ExampleRoute(
+            requestURI: 'example/add-example',
+            action: new AddExample(
+                dbmsConnection: $dbmsConnection,
+                httpRequest: $httpRequest,
+                httpResponse: $httpResponse,
             ),
-            new ExampleRoute(
-                requestURI: 'example/([0-9]{1,3})',
-                action: new ShowExample(
-                    dbmsConnection: $dbmsConnection,
-                    httpRequest: $httpRequest,
-                ),
-                parameters: new ParameterCollection(
-                    new Parameter(name: 'id', value: '$1'),
-                ),
+        ),
+        new ExampleRoute(
+            requestURI: 'example/([0-9]{1,3})',
+            action: new ShowExample(
+                dbmsConnection: $dbmsConnection,
+                httpRequest: $httpRequest,
+                httpResponse: $httpResponse,
             ),
-        )
+            parameters: new ParameterCollection(
+                new Parameter(name: 'id', value: '$1'),
+            ),
+        ),
+        new ExampleRoute(
+            requestURI: 'example/remove/([0-9]{1,3})',
+            action: new RemoveExample(
+                dbmsConnection: $dbmsConnection,
+                httpRequest: $httpRequest,
+                httpResponse: $httpResponse,
+            ),
+            parameters: new ParameterCollection(
+                new Parameter(name: 'id', value: '$1'),
+            ),
+        ),
+        new ExampleRoute(
+            requestURI: 'example/change',
+            action: new ChangeExample(
+                dbmsConnection: $dbmsConnection,
+                httpRequest: $httpRequest,
+                httpResponse: $httpResponse,
+            ),
+        ),
     ),
 );
 
-$example2Routes = new RouteCollection(
-    new Example2Route(
-        requestURI: 'example2(/.*){0,1}',
-        action: new Show404Example2(
+$routeCollection = new RouteCollection(
+    new HomeRoute(
+        requestURI: '.*',
+        action: new Show404(
             dbmsConnection: $dbmsConnection,
             httpRequest: $httpRequest,
+            httpResponse: $httpResponse,
         ),
         childRoutes: new RouteCollection(
-            new Example2Route(
-                requestURI: 'example2',
-                action: new ShowAllExample2s(
+            new HomeRoute(
+                requestURI: '/?',
+                action: new ShowHome(
                     dbmsConnection: $dbmsConnection,
                     httpRequest: $httpRequest,
+                    httpResponse: $httpResponse,
                 ),
             ),
-            new Example2Route(
-                requestURI: 'example2/([0-9]{1,3})',
-                action: new ShowExample2(
-                    dbmsConnection: $dbmsConnection,
-                    httpRequest: $httpRequest,
-                ),
-                parameters: new ParameterCollection(
-                    new Parameter(name: 'id', value: '$1'),
-                ),
-            ),
-        )
+            $exampleRoutes,
+        ),
     ),
 );
 
-$mainRoutes = new RouteCollection(
-    ...$exampleRoutes,
-    ...$example2Routes,
-);
-
-$router = new Router(routeCollection: $mainRoutes, httpRequest: $httpRequest);
+$router = new Router(routeCollection: $routeCollection, httpRequest: $httpRequest);
 $action = $router->getActionFromRoutes();
 $template = $action->execute();
-$template->display();
+$template?->display();
 
 ```
+
+Request URI examples:
+
+* “example/1” matches with `.*`, `example(/.*)?` then `example/([0-9]{1,3})`, the triggered action is `ShowExample`.
+* “example/test” matches with `.*` then only `example(/.*)?`, the triggered action is `Show404Example`.
+* “test” matches only with `.*`, the triggered action is `Show404`.
 
 #### In `src/Domains/MyDomain/Actions/ShowAllExamples.php`
 
@@ -597,7 +620,7 @@ class ShowAllExamples extends ExampleAction
             );
         }
 
-        return new AllExamplesTemplate(examples: $allExamples);
+        return new AllExamplesTemplate(examples: $allExamples, httpResponse: $this->httpResponse);
     }
 }
 
@@ -613,8 +636,10 @@ namespace MyApp\Domains\MyDomain\Templates;
 
 class AllExamplesTemplate extends Template
 {
-    public function __construct(ExampleCollection $examples)
+    public function __construct(ExampleCollection $examples, HTTPResponse $httpResponse)
     {
+        $header = new HeaderTemplate(httpResponse: $httpResponse);
+
         $builder = (new HTMLElementsBuilder)
             ->openElement('html')
                 ->addAttribute(name: 'lang', value: 'en')
@@ -638,6 +663,7 @@ class AllExamplesTemplate extends Template
                 ->closeElement(name: 'head')
 
                 ->openElement(name: 'body')
+                    ->addElements(elements: $header->getElements())
                     ->openElement(name: 'h1', value: 'Examples :')->closeElement(name: 'h1')
         ;
 
@@ -645,14 +671,14 @@ class AllExamplesTemplate extends Template
         {
             $builder
                     ->openElement(name: 'p')
-                        ->addContent(text: 'field1 : ' . $example->getField1() . ', field2 : ' . $example->getField2() . ' ')
+                        ->addContent(text: 'field1: ' . $example->getField1() . ', field2: ' . $example->getField2() . ' ')
                         ->openElement(name: 'a')
-                            ->addAttribute(name: 'href', value: $example->getId())
+                            ->addAttribute(name: 'href', value: '/example/' . $example->getId())
                             ->addContent(text: 'Details')
                         ->closeElement(name: 'a')
                         ->addContent(text: ' ')
                         ->openElement(name: 'a')
-                            ->addAttribute(name: 'href', value: 'remove/' . $example->getId())
+                            ->addAttribute(name: 'href', value: '/example/remove/' . $example->getId())
                             ->addContent(text: 'Remove')
                         ->closeElement(name: 'a')
                     ->closeElement(name: 'p')
@@ -664,7 +690,7 @@ class AllExamplesTemplate extends Template
             ->closeElement(name: 'html')
         ;
 
-        parent::__construct(elements: $builder->getElements());
+        parent::__construct(elements: $builder->getElements(), httpResponse: $httpResponse);
     }
 }
 

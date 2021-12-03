@@ -11,6 +11,18 @@ use PHPeacock\Framework\Exceptions\DOM\DOMElementsBuilderException;
  */
 class HTMLElementsBuilder extends DOMElementsBuilder
 {
+    /**
+     * HTML elements under construction.
+     * @var HTMLElementCollection $elements
+     */
+    protected HTMLElementCollection $elements;
+
+    /**
+     * Stack of opened HTML elements.
+     * @var SplStack $lastElementsStack
+     */
+    protected \SplStack $lastElementsStack;
+
     public function __construct()
     {
         $this->elements = new HTMLElementCollection();
@@ -70,7 +82,7 @@ class HTMLElementsBuilder extends DOMElementsBuilder
     /**
      * {@inheritDoc}
      */
-    public function addAttribute(string $name, string $value): self
+    public function addAttribute(string $name, string $value = ''): self
     {
         try
         {
@@ -99,5 +111,39 @@ class HTMLElementsBuilder extends DOMElementsBuilder
         $this->lastElementsStack->top()->getChildNodes()->attach(htmlNode: $element);
 
         return $this;
+    }
+
+    /**
+     * Adds a collection of HTML elements to the last opened element.
+     * 
+     * @param HTMLElementCollection $elements Collection of HTML elements.
+     * 
+     * @return self
+     */
+    public function addElements(HTMLElementCollection $elements): self
+    {
+        foreach ($elements as $element)
+        {
+            if ($this->lastElementsStack->isEmpty())
+            {
+                $this->elements->attach(htmlElement: $element);
+            }
+            else
+            {
+                $this->lastElementsStack->top()->getChildNodes()->attach(htmlNode: $element);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns the elements property.
+     * 
+     * @return HTMLElementCollection
+     */
+    public function getElements(): HTMLElementCollection
+    {
+        return $this->elements;
     }
 }
