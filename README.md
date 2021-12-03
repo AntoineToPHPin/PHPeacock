@@ -10,6 +10,8 @@ Download the source code and make your favorite web server software rewrites the
 * `https://example.com/path1/path2/path3` will become `https://example.com/bootstrap.php?requestURI=path1/path2/path3`.
 * `https://example.com/action/123` will become `https://example.com/bootstrap.php?requestURI=action/123`.
 
+The required PHP version is 8.0.
+
 ## Documentation
 
 You can read the [PHPeacock documentation](docs/documentation.md).
