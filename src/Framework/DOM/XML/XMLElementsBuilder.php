@@ -11,6 +11,18 @@ use PHPeacock\Framework\Exceptions\DOM\DOMElementsBuilderException;
  */
 class XMLElementsBuilder extends DOMElementsBuilder
 {
+    /**
+     * XML elements under construction.
+     * @var XMLElementCollection $elements
+     */
+    protected XMLElementCollection $elements;
+
+    /**
+     * Stack of opened XML elements.
+     * @var SplStack $lastElementsStack
+     */
+    protected \SplStack $lastElementsStack;
+
     public function __construct()
     {
         $this->elements = new XMLElementCollection();
@@ -99,5 +111,39 @@ class XMLElementsBuilder extends DOMElementsBuilder
         $this->lastElementsStack->top()->getChildNodes()->attach(xmlNode: $element);
 
         return $this;
+    }
+
+    /**
+     * Adds a collection of XML elements to the last opened element.
+     * 
+     * @param XMLElementCollection $elements Collection of XML elements.
+     * 
+     * @return self
+     */
+    public function addElements(XMLElementCollection $elements): self
+    {
+        foreach ($elements as $element)
+        {
+            if ($this->lastElementsStack->isEmpty())
+            {
+                $this->elements->attach(xmlElement: $element);
+            }
+            else
+            {
+                $this->lastElementsStack->top()->getChildNodes()->attach(xmlNode: $element);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns the elements property.
+     * 
+     * @return XMLElementCollection
+     */
+    public function getElements(): XMLElementCollection
+    {
+        return $this->elements;
     }
 }

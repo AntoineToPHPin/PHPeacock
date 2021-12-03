@@ -23,7 +23,7 @@ class XMLDocument extends DOMDocument
      */
     public function __toString(): string
     {
-        $domDocument = new \DOMDocument();
+        $domDocument = new \DOMDocument(version: '1.0', encoding: 'UTF-8');
         $domDocument->preserveWhiteSpace = false;
         $domDocument->formatOutput = true;
 

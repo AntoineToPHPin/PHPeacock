@@ -2,6 +2,7 @@
 namespace PHPeacock\Framework\Routing;
 
 use PHPeacock\Framework\HTTP\HTTPRequest;
+use PHPeacock\Framework\HTTP\HTTPResponse;
 use PHPeacock\Framework\Persistence\Connections\DBMSConnection;
 use PHPeacock\Framework\Template\Template;
 
@@ -21,12 +22,19 @@ abstract class Action
      */
 
     /**
+     * HTTP response.
+     * @var HTTPResponse $httpResponse
+     */
+
+    /**
      * @param DBMSConnection $dbmsConnection Related DBMS connection.
      * @param HTTPRequest    $httpRequest    HTTP request.
+     * @param HTTPResponse   $httpResponse   HTTP response.
      */
     public function __construct(
         protected DBMSConnection $dbmsConnection,
         protected HTTPRequest $httpRequest,
+        protected HTTPResponse $httpResponse,
     )
     { }
 
@@ -35,9 +43,9 @@ abstract class Action
      * 
      * @throws ExecuteActionException if an error occurs when the action was executed.
      * 
-     * @return Template
+     * @return Template|null
      */
-    abstract public function execute(): Template;
+    abstract public function execute(): ?Template;
 
     /**
      * Returns the dbmsConnection property.
@@ -81,5 +89,27 @@ abstract class Action
     public function setHTTPRequest(HTTPRequest $httpRequest): void
     {
         $this->httpRequest = $httpRequest;
+    }
+
+    /**
+     * Returns the httpResponse property.
+     * 
+     * @return HTTPResponse
+     */
+    public function getHTTPResponse(): HTTPResponse
+    {
+        return $this->httpResponse;
+    }
+
+    /**
+     * Sets the httpResponse property.
+     * 
+     * @param HTTPResponse $httpResponse HTTP response.
+     * 
+     * @return void
+     */
+    public function setHTTPResponse(HTTPResponse $httpResponse): void
+    {
+        $this->httpResponse = $httpResponse;
     }
 }
