@@ -7,18 +7,6 @@ namespace PHPeacock\Framework\DOM;
 abstract class DOMElementsBuilder
 {
     /**
-     * DOM elements under construction.
-     * @var DOMElementCollection $elements
-     */
-    protected DOMElementCollection $elements;
-
-    /**
-     * Stack of opened DOM elements.
-     * @var SplStack $lastElementsStack
-     */
-    protected \SplStack $lastElementsStack;
-
-    /**
      * Opens an element.
      * 
      * @param string $name  Element name.
@@ -61,14 +49,4 @@ abstract class DOMElementsBuilder
      * @return self
      */
     abstract public function addContent(string $text): self;
-
-    /**
-     * Returns the elements property.
-     * 
-     * @return DOMElementCollection
-     */
-    public function getElements(): DOMElementCollection
-    {
-        return $this->elements;
-    }
 }

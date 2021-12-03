@@ -638,6 +638,8 @@ class AllExamplesTemplate extends Template
 {
     public function __construct(ExampleCollection $examples, HTTPResponse $httpResponse)
     {
+        $header = new HeaderTemplate(httpResponse: $httpResponse);
+
         $builder = (new HTMLElementsBuilder)
             ->openElement('html')
                 ->addAttribute(name: 'lang', value: 'en')
@@ -661,6 +663,7 @@ class AllExamplesTemplate extends Template
                 ->closeElement(name: 'head')
 
                 ->openElement(name: 'body')
+                    ->addElements(elements: $header->getElements())
                     ->openElement(name: 'h1', value: 'Examples :')->closeElement(name: 'h1')
         ;
 
